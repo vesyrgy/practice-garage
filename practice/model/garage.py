@@ -17,18 +17,28 @@ class Garage(ndb.Model):
 
     @classmethod
     def list(cls, name=None, brand=None, limit=20):
-        garages = memcache.get("garages")
-        if not garages:
-            q = Garage.query()
-            if name:
-                q.filter(Garage.name, name)
-            elif brand:
-                q.filter(Garage.brand, brand)
-            garages = [x for x in q]
-            memcache.set("garages", garages)
-        if limit and len(garages) > limit:
-            return garages[:limit]
-        return garages
+        if not name and not brand:
+            """ example with caching
+            """
+            garages = memcache.get("garages")
+            if not garages:
+                q = Garage.query()
+                garages = [x for x in q]
+                memcache.set("garages", garages)
+            if limit and len(garages) > limit:
+                return garages[:limit]
+            return garages
+        
+        """ example normal query with filter
+        """
+        q = Garage.query()
+        if name:
+            q.filter(Garage.name, name)
+        elif brand:
+            q.filter(Garage.brand, brand)
+        if limit:
+            return q.fetch(limit)
+        return [x for x in q]
 
     def fill(self, props):
         if 'name' in props:

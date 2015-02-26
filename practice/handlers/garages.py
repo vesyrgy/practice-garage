@@ -1,6 +1,6 @@
 
-from src.handlers import BasicHandler
-from src.models.garage import Garage
+from practice.handlers import BasicHandler
+from practice.model.garage import Garage
 
 
 class Garages(BasicHandler):

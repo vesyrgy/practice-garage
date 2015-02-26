@@ -1,18 +1,19 @@
-
 from google.appengine.ext import ndb
 
 
 class Garage(ndb.Model):
-    
+
     name = ndb.StringProperty(required=True)
     brand = ndb.StringProperty()
-    
+
+    postal_country = ndb.StringProperty()
+
     note = ndb.TextProperty(indexed=False)
-    
+
     @classmethod
     def get(cls, key):
         return ndb.Key("Garage", int(key)).get()
-    
+
     @classmethod
     def list(cls, name=None, brand=None, limit=20):
         q = Garage.query()
@@ -31,8 +32,14 @@ class Garage(ndb.Model):
             self.brand = params.get('brand')
         if 'note' in params:
             self.note = params.get('note')
-    
+
     def save(self):
-        import logging
-        logging.warning("putting it in datastore :O")
         self.put()
+
+    @classmethod
+    def add(cls, props):
+        g = Garage(**props)
+        g.save()
+
+    def delete(self):
+        self.key.delete()

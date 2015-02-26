@@ -1,6 +1,5 @@
-from testcases import BasicTestCase
-from src.models.garage import Garage
-import logging
+from testcases.base import BasicTestCase
+from practice.model.garage import Garage
 
 
 """ Very simple example how to use the BasicTestCase
@@ -12,7 +11,7 @@ class GarageTestCase(BasicTestCase):
             
             no need to call super
         '''
-        pass
+        BasicTestCase.setUP(self)
     
     def test_datastore(self):
         ''' start with test_ to get function started
@@ -25,11 +24,18 @@ class GarageTestCase(BasicTestCase):
         hueaah"""
         
         g.put()
-
-        for g2 in Garage.query():
-            print g2.name
-            logging.warning(g2.note)
         self.assertEqual(1, Garage.query().count()) # yay success
+        
+    def test_twee(self):
+        g = Garage()
+        g.name = "test1"
+        g.brande = "Patat"
+        g.note = """ Testing note
+        for multi line
+        hueaah"""
+        g.put()
+        
+        self.assertEqual(2, Garage.query().count(), "No you suck")
         
     def tearDown(self):
         """ tearDown will be called after a testcase

@@ -1,4 +1,3 @@
-
 from practice.handlers import BasicHandler
 from practice.model.garage import Garage
 

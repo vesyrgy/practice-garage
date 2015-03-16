@@ -22,7 +22,7 @@ class GarageTestCase(BasicTestCase):
         g.note = """ Testing note
         for multi line
         hueaah"""
-        
+        print str(g.id)
         g.put()
         self.assertEqual(1, Garage.query().count()) # yay success
         

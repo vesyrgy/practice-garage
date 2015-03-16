@@ -1,8 +1,9 @@
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
+from practice.system.base.model import BaseModel
 
 
-class Garage(ndb.Model):
+class Garage(BaseModel):
 
     name = ndb.StringProperty(required=True)
     brand = ndb.StringProperty()
@@ -11,9 +12,9 @@ class Garage(ndb.Model):
 
     note = ndb.TextProperty(indexed=False)
 
-    @classmethod
-    def get(cls, key):
-        return ndb.Key("Garage", int(key)).get()
+#     @classmethod
+#     def get(cls, key):
+#         return ndb.Key("Garage", int(key)).get()
 
     @classmethod
     def list(cls, name=None, brand=None, limit=20):

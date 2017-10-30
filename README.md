@@ -31,8 +31,7 @@ go to :<br>
 `/google-cloud-sdk/platform/google_appengine/google/appengine/tools/devappserver2/mtime_file_watcher.py`
     
 below the
-```
-for dirpath, dirnames, filenames in os.walk(self._directory, followlinks=True):```
+<br>`for dirpath, dirnames, filenames in os.walk(self._directory, followlinks=True):`
 
 place at line ~167: _ofcourse this line number can be different_
 ```

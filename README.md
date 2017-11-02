@@ -1,4 +1,8 @@
 # practice-garage
+
+This project is assuming you are familiar with the app engine basics:<br>
+if not please check [guestbook tutorial](https://cloud.google.com/appengine/docs/standard/python/getting-started/creating-guestbook)
+
 Practice for google app engine python with jinja2 jquery and webpack
 
 download the project
@@ -7,11 +11,11 @@ download the project
 
 - install 
 [google app engine](https://cloud.google.com/appengine/docs/standard/python/download)
--- _The app-engine-python package is required_<br>
+-- _The app-engine-python package is required_
+<br>In the commandline go to project and check the `glcoud components list`. If app-engine-python is not installed run: `gcloud components install app-engine-python`
+
 
 see [GAE local run](https://cloud.google.com/appengine/docs/standard/python/tools/using-local-server)
-
-
 
 
 ## Setup _npm and webpack_

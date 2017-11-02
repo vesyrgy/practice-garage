@@ -9,7 +9,6 @@ from practice.system.params import ParamCollection
 class BasicHandler(RequestHandler):
     
     def initialize(self, request, response):
-        # logging.warning("BasicHandler.initialize")
         super(BasicHandler, self).initialize(request, response)
         self.params = ParamCollection(self.request)
 
@@ -25,4 +24,17 @@ class BasicHandler(RequestHandler):
         """
         rv = self.jinja().render_template(_template, **tv)
         self.response.write(rv)
-        
+
+    def render_json(self, data):
+        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
+        self.response.write(data)
+
+    def render_json_ok(self):
+        response = {
+            'status': {
+                'code': 200,
+                'message': 'Success',
+            },
+            'response': {}
+        }
+        self.render_json(response)

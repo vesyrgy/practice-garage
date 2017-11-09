@@ -6,7 +6,6 @@ function resolve (dir) {
 }
 
 module.exports = {
-    context: resolve("/"),
     watch: true,
     entry: {
         home: './web/home.js'

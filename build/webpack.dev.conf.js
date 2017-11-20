@@ -22,5 +22,23 @@ module.exports = {
             '$': 'jquery',
             'jQuery': 'jquery'
         })
-    ]
+    ],
+    resolve: {
+      alias: {
+        vue: 'vue/dist/vue.js'
+      }
+    },
+    module: {
+        loaders: [
+          {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            exclude: /node_modules/
+          },
+          {
+            test: /\.vue$/,
+            loader: 'vue-loader'
+          }
+        ]
+    }
 };

@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 {% block script %}
 <!-- script here -->
-<script type="text/javascript" src="/static/dist/home.js"></script>
 {% endblock %}
 {% block title %}Home{% endblock %}
 {% block page %}
 <nav class="navbar navbar-inverse">
 	<div class="container">
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" wdata-target="#navbar" aria-expanded="false" aria-controls="navbar">
 				<span class="sr-only">Toggle navigation</span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
@@ -25,25 +24,41 @@
 		</div>
 	</div>
 </nav>
+
+<script type="text/x-template" id="modal-template">
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+					<form class="panel well">
+						<div class="form-group">
+								<label for="name">Name</label>
+								<input v-model='gname' type="text" class="form-control" placeholder="Enter name">
+							</div>
+							<div class="form-group">
+								<label for="brand">Brand</label>
+								<input v-model='gbrand' type="text" class="form-control" placeholder="Brand">
+							</div>
+
+							<button type="button" class="btn btn-default btn-primary" id="addGarage" @click='saveGarage()'>Add</button> <button type="button" class="btn btn-default btn-danger modal-default-button" @click="$emit('close')">Close</button>
+						</form>
+        </div>
+      </div>
+    </div>
+  </transition>
+</script>
+
+
 <div class="container">
 	<div class="row">
-		<div id="container-add-garage" class="panel well col-xs-12">
-			<form>
-				<div class="form-group">
-		    		<label for="exampleInputEmail1">Name</label>
-		    		<input type="text" class="form-control" id="g-name" placeholder="Enter name">
-		  		</div>
-		  		<div class="form-group">
-		    		<label for="exampleInputPassword1">Brand</label>
-		    		<input type="text" class="form-control" id="g-brand" placeholder="Brand">
-		  		</div>
-		  	</form>
-			<button type="button" id="add-garage" class="btn btn-primary save">Save</button>
-		</div>
-	</div>
-	<div id="garage-list" class="row">
+    <div id="garages" class="panel well col-xs-12">
+				<button class="btn btn-default btn-primary" @click="showModal = true">Add Garage</button>
+			<garage-list></garage-list>
 
+			<modal v-if="showModal" @close="showModal = false">
+		</div>
 	</div>
 </div>
 
+<script type="text/javascript" src="/static/dist/home.js"></script>
 {% endblock %}

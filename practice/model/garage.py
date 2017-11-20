@@ -10,7 +10,7 @@ class Garage(BaseModel):
 
     postal_country = ndb.StringProperty()
 
-    note = ndb.TextProperty(indexed=False)
+    #note = ndb.TextProperty(indexed=False)
 
 #     @classmethod
 #     def get(cls, key):
@@ -29,14 +29,14 @@ class Garage(BaseModel):
             if limit and len(garages) > limit:
                 return garages[:limit]
             return garages
-        
+
         """ example normal query with filter
         """
         q = Garage.query()
         if name:
-            q.filter(Garage.name == name)
+            q = q.filter(Garage.name == name)
         elif brand:
-            q.filter(Garage.brand == brand)
+            q = q.filter(Garage.brand == brand)
         if limit:
             return q.fetch(limit)
         return [x for x in q]
@@ -46,8 +46,8 @@ class Garage(BaseModel):
             self.name = props['name']
         if 'brand' in props:
             self.brand = props['brand']
-        if 'note' in props:
-            self.note = props['note']
+        if 'postal_country' in props:
+            self.portal_country = props['postal_country']
 
     def save(self):
         self.put()

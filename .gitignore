@@ -6,3 +6,5 @@
 .settings/
 node_modules/
 static/dist/
+
+static/dist/home.js

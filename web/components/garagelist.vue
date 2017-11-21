@@ -17,7 +17,7 @@
         }
       },
       methods: {
-        getList() {
+        getList: function() {
             var self = this
             $.ajax({url:'/garages',
                 success: function(data) {

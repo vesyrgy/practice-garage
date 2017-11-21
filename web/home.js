@@ -48,6 +48,27 @@ new Vue({
     }
 });
 
+var a = [
+  "We're up all night 'til the sun",
+  "We're up all night to get some",
+  "We're up all night for good fun",
+  "We're up all night to get lucky"
+];
+
+// These two assignments are equivalent:
+
+// Old-school:
+var superduper = a.map(function(s){ return s.length });
+console.log(superduper)
+
+// ECMAscript 6 using arrow functions
+var superduper3 = a.map( s => s.length );
+console.log(superduper3)
+
+let add = (x,y) => x + y;
+let result = add(1,1);
+console.log(result);
+
 $('body').on('click', '.edit-garage', function() {
   alert('dwadawadw');
   //eventHub.$emit('refreshList');

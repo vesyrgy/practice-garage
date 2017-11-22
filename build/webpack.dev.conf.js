@@ -29,17 +29,15 @@ module.exports = {
       }
     },
     module: {
-        loaders: [
+        rules: [
           {
             test: /\.js$/,
             use: {
                 loader: 'babel-loader',
                 options: {
-                  presets: ['es2015']
+                  presets: ['env']
                 }
-            },
-            
-            exclude: /node_modules/
+            }
           },
           {
             test: /\.vue$/,

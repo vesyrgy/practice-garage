@@ -15,11 +15,13 @@ class Garages(BasicHandler):
     def get(self, key="", topic="", ident=""):
         if not key:
             garages = Garage.query()
-            garages = json.dumps([p.to_dict() for p in Garage.query().fetch()])
+            # garages = json.dumps([p.to_dict() for p in Garage.query().fetch()])
+            garages = json.dumps([ { "id": p.id, "name": p.name } for p in Garage.query().fetch()])
             self.render_json(garages)
         else:
             garage = Garage.get(key)
             logging.warning("Got garage " + garage.name)
+            self.render_json(json.dumps({ "id": garage.id, "name": garage.name}))
             pass
 
     def post(self, key="", topic="", ident=""):

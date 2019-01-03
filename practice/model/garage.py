@@ -9,6 +9,7 @@ class Garage(BaseModel):
     brand = ndb.StringProperty()
 
     postal_country = ndb.StringProperty()
+    
 
     #note = ndb.TextProperty(indexed=False)
 

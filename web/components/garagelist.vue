@@ -33,7 +33,7 @@
             });
         },
         getGarage: function(id) {
-            this.$router.go({ name: 'garage', params: {id} });
+            this.$router.push({ name: 'garage', params: {id} });
         }
       },
       created: function() {

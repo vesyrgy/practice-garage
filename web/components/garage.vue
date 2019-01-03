@@ -15,11 +15,7 @@
         },
         methods: {
             showGarage: function(id) {
-                console.log(this.$route.params.id)
-                console.log("clicked")
                 var self = this
-                console.log(id)
-                
                 $.ajax({url:'/garages/'+this.$route.params.id,
                     success: function(data) {
                         console.log("sucess")

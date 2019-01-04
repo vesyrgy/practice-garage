@@ -4,7 +4,6 @@ from practice.system.base.model import BaseModel
 
 
 class Garage(BaseModel):
-
     name = ndb.StringProperty(required=True)
     brand = ndb.StringProperty()
 

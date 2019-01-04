@@ -1,7 +1,7 @@
 <template>
     <div class="garage">
         <h3>Garage: {{garageData.name}}</h3>
-        <p>Deze garage heeft id: {{ garageData.id }}</p>
+        <p>Deze garage heeft id: {{this.$route.params.id}}</p>
     </div>
 </template>
 

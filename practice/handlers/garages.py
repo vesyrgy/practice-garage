@@ -21,7 +21,7 @@ class Garages(BasicHandler):
         else:
             garage = Garage.get(key)
             logging.warning("Got garage " + garage.name)
-            self.render_json(json.dumps({ "id": garage.id, "name": garage.name}))
+            self.render_json(json.dumps(garage.to_dict()))
             pass
 
     def post(self, key="", topic="", ident=""):

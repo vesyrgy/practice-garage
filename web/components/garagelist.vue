@@ -6,11 +6,11 @@
         <!-- <modal v-if="show" v-on:close="show = false"></modal> -->
         <!-- <modal></modal> -->
 
-        <button class="btn btn-default btn-primary" v-on:click="showForm = true">Add Garage</button>
+        <button v-if="!showForm" class="btn btn-default btn-primary" v-on:click="showForm = true">Add Garage</button>
         <form v-if="showForm">
             <input v-model='gname' type="text" class="form-control" placeholder="Enter name"> 
+            <button type="button" class="btn btn-default btn-secondary modal-default-button" v-on:click="showForm = false">Close</button>
             <button type="button" class="btn btn-default btn-primary" id="addGarage" v-on:click='addGarage()'>Add</button> 
-            <button type="button" class="btn btn-default btn-danger modal-default-button" v-on:click="showForm = false">Close</button>
         </form>
         <div id="garages" class="panel well col-xs-12">    
             <ul>
@@ -80,6 +80,9 @@
 </script>
 
 <style>
+    /* .btn-secondary {
+
+    } */
 	.col-1 { 
         width: 25%;
         float: left;

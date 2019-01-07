@@ -1,7 +1,10 @@
 from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from practice.system.base.model import BaseModel
+import logging
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 class Garage(BaseModel):
     name = ndb.StringProperty(required=True)
@@ -12,9 +15,10 @@ class Garage(BaseModel):
 
     #note = ndb.TextProperty(indexed=False)
 
-#     @classmethod
-#     def get(cls, key):
-#         return ndb.Key("Garage", int(key)).get()
+    @classmethod
+    def get(cls,key):
+        logging.info("Getting Garage with key: %s" % key)
+        return ndb.Key("Garage", int(key)).get()
 
     @classmethod
     def list(cls, name=None, brand=None, limit=20):
@@ -59,9 +63,13 @@ class Garage(BaseModel):
         g = Garage()
         g.fill(props=props)
         g.save()
+        return g.id
         # adding garage changes list but handled in the save
 
     def delete(self):
         self.key.delete()
         # i removed a garages so cache list incorrect
         memcache.delete("garages")
+
+    
+        

@@ -2,14 +2,15 @@
 	
     <div>
 		<h1>Garages</h1>
-        <!-- <button class="btn btn-default btn-primary" v-on:click="showModal">Add Garage (via modal)</button> -->
-        <!-- <modal v-if="show" v-on:close="show = false"></modal> -->
-        <!-- <modal></modal> -->
+        <!-- <button class="btn btn-default btn-primary" v-on:click="showModal = true">Add Garage (via modal)</button>
+        <modal v-if="showModal" v-on:close="showModal = false"></modal> -->
 
         <button v-if="!showForm" class="btn btn-default btn-primary" v-on:click="showForm = true">Add Garage</button>
-        <form v-if="showForm">
+        <form class="addGarageForm" v-if="showForm">
             <input v-model='gname' type="text" class="form-control" placeholder="Enter name"> 
-            <button type="button" class="btn btn-default btn-secondary modal-default-button" v-on:click="showForm = false">Close</button>
+            <input v-model='gbrand' type="text" class="form-control" placeholder="Enter brand"> 
+            <input v-model='gpostal' type="text" class="form-control" placeholder="Enter postal country"> 
+            <button type="button" class="btn btn-default btn-secondary modal-default-button" id ="cancel" v-on:click="showForm = false">Cancel</button>
             <button type="button" class="btn btn-default btn-primary" id="addGarage" v-on:click='addGarage()'>Add</button> 
         </form>
         <div id="garages" class="panel well col-xs-12">    
@@ -35,7 +36,10 @@
       name: 'garage-list',
       data: function () {
         return {
+            // showModal: false,
             gname: '',
+            gbrand: '',
+            gpostal: '',
             showForm: false,
             garagelist: []
         }
@@ -43,8 +47,12 @@
       methods: {
         getList: function() {
             var self = this
-            $.ajax({url:'/garages',
+            $.ajax({
+                method: 'GET',
+                url:'/garages',
                 success: function(data) {
+                    console.log("list gotten")
+                    console.log("data; " + data)
                     self.garagelist = data
                 }
             });
@@ -54,18 +62,33 @@
         },
         addGarage: function() {
             var self = this
-            $.ajax({
+            self.showForm = false
+            self.loading = true
+            $.when($.ajax({
                 method: 'POST',
                 url: '/garages',
-                data: { name: this.gname },
+                data: { name: self.gname, brand: self.gbrand, postal_country: self.gpostal },
+                timeout: 60000,
                 success: function(data) {
-                    self.getList()
+
+                    self.data = data
                 }
-            });
+            })).done((data) => {
+                self.data = data
+                console.log("id of new garage: " + data.id)
+            }).then(
+                setTimeout(function() {self.getList()}, 100)
+            ).always(() => {
+                self.loading = false
+            })
+                
         },
         showModal: function() {
             
         }
+      },
+      beforeMount: function() {
+        this.getList();
       },
       created: function() {
         this.getList();
@@ -80,15 +103,19 @@
 </script>
 
 <style>
-    /* .btn-secondary {
-
-    } */
-	.col-1 { 
-        width: 25%;
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    #cancel {
+        color: gray;
         float: left;
     }
-    .col-2 {
-        width: 75%;
-        float: left;
+    #addGarage {
+        float: right;
+    }
+    .addGarageForm {
+        grid-column: 2 / span 3;
     }
 </style>

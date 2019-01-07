@@ -1,5 +1,5 @@
 <template>
-    <!-- <transition name="modal"> -->
+    <transition name="modal">
         <div class="modal-mask">
             <p>werkt dit al?</p>
             <div class="modal-wrapper">
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-    <!-- </transition> -->
+    </transition>
 </template>
     
 

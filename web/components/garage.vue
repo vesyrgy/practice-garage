@@ -7,7 +7,7 @@
             <h4>Merk: {{gbrand}}</h4>
             <h4>Land: {{gpostal}}</h4>
             <car-list :carlist="carList" :gid="gid" :gname="gname" :showCarForm="showCarForm" @hideForm="showCarForm = $event"></car-list>
-            <div class="btn-group">
+            <div v-if="!showCarForm" class="btn-group">
                 <button type="button" class="btn btn-default btn-secondary" id="addCar" v-on:click='showCarForm=true'>Auto Toevoegen</button>
                 <button type="button" class="btn btn-default btn-primary" id="editGarage" v-on:click='edit=true'>Bewerken</button>
                 <button type="button" class="btn btn-default btn-danger" id="delete" v-on:click='deleteGarage()'>Verwijderen</button> 

@@ -9,12 +9,17 @@ class Car(BaseModel):
     brand = ndb.StringProperty()
     kenteken = ndb.StringProperty(required=True)
     color = ndb.StringProperty()
-    garage = ndb.KeyProperty(kind=Garage)
+    garage = ndb.KeyProperty(kind=Garage, required=True)
 
     @classmethod
     def get(cls,key):
         logging.info("Getting Car with key: %s" % key)
         return ndb.Key("Car", int(key)).get()
+
+    def getGarage(self):
+        garage = self.garage.get()
+        logging.info("Getting Garage with id: %s " % garage.id)
+        return garage
 
     @classmethod
     def list(cls, name=None, brand=None, limit=20):
@@ -50,6 +55,8 @@ class Car(BaseModel):
             self.kenteken = props['kenteken']
         if 'color' in props:
             self.color = props['color']
+        if 'garageId' in props:
+            self.garage = ndb.Key('Garage', int(props['garageId']))
 
     def save(self):
         self.put()
@@ -68,3 +75,9 @@ class Car(BaseModel):
         self.key.delete()
         # i removed a car so cache list incorrect
         memcache.delete("cars")
+
+    def to_dict(self):
+        result = super(Car, self).to_dict()
+        result['garage'] = self.garage.get().id
+        result['id'] = self.id
+        return result

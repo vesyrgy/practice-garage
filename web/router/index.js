@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '../components/Home'
 import Garages from '../components/garagelist'
 import Garage from '../components/garage'
+import Cars from '../components/carlist'
 
 Vue.use(Router)
 

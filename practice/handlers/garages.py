@@ -1,7 +1,9 @@
 from practice.handlers import BasicHandler
 from practice.model.garage import Garage
+from practice.model.car import Car
 import json
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -18,23 +20,34 @@ class Garages(BasicHandler):
     def get(self, key="", topic="", ident=""):
         if not key:
             garages = Garage.query()
-            # garages = json.dumps([p.to_dict() for p in Garage.query().fetch()])
-            garages = json.dumps([ { "id": p.id, "name": p.name } for p in Garage.query().fetch()])
+            garages = json.dumps([p.to_dict() for p in Garage.query().fetch()])
+            # garages = json.dumps([ { "id": p.id, "name": p.name } for p in Garage.query().fetch()])
             self.render_json(garages)
             logging.info('returning garages: %s' % garages)
         else:
             garage = Garage.get(key)
             logging.warning("Got garage " + garage.name)
-            self.render_json(json.dumps(garage.to_dict()))
+            if topic == 'cars': 
+                logging.info('topic is cars')
+                autos = json.dumps([c.to_dict() for c in garage.cars() ])
+                logging.info(autos)
+                self.render_json(autos)
+            if not topic:
+                self.render_json(json.dumps(garage.to_dict()))
             pass
 
     def post(self, key="", topic="", ident=""):
+        logging.info('Garages.post called with params: %s' % self.params.params)
         if not key:
             idnum =  Garage.add(self.params.params)
             logging.info("Garage with id %s created" % idnum)
             self.render_json(json.dumps({"id": idnum}))
         else:
-            # edit garage
+            if topic == 'cars':
+                logging.info("Garage key is: %s " % key)
+                car_id = Car.add(self.params.params)
+                logging.info("Car with id %s created" % car_id)
+                self.render_json(json.dumps({"car_id": car_id}))
             pass
 
     def put(self, key="", topic=""):

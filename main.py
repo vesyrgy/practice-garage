@@ -3,6 +3,7 @@ from webapp2_extras import jinja2
 from practice.handlers.garages import Garages
 from practice.handlers.cars import Cars
 from practice.handlers.home import HomePage
+import re
 
 
 class MainPage(webapp2.RequestHandler):
@@ -28,6 +29,7 @@ app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/home', HomePage),
     ('/garages', Garages),
-    ('/garages/(.*)', Garages),
-    ('/cars', Cars)
+    ('/garages/(.*)/(.*)/(.*)', Garages),
+    ('/garages/(.*)/(.*)', Garages),
+    ('/garages/(.*)', Garages)
     ], debug=True)

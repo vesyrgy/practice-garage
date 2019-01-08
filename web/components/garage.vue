@@ -6,13 +6,16 @@
         <div class="garageView" v-if="!edit">
             <h4>Merk: {{gbrand}}</h4>
             <h4>Land: {{gpostal}}</h4>
+            <car-list :carlist="carList" :gid="gid" :gname="gname" :showCarForm="showCarForm" @hideForm="showCarForm = $event"></car-list>
             <div class="btn-group">
+                <button type="button" class="btn btn-default btn-secondary" id="addCar" v-on:click='showCarForm=true'>Auto Toevoegen</button>
                 <button type="button" class="btn btn-default btn-primary" id="editGarage" v-on:click='edit=true'>Bewerken</button>
                 <button type="button" class="btn btn-default btn-danger" id="delete" v-on:click='deleteGarage()'>Verwijderen</button> 
             </div>
+
         </div>
 
-        <form class="addGarageForm" v-if="edit">
+        <form class="editGarageForm" v-if="edit">
             <label for="naam">Naam</label>
             <input id="naam" v-model='gname' type="text" class="form-control" v-bind:placeholder="garageData.name">
             <label for="merk">Merk</label>
@@ -30,6 +33,8 @@
 </template>
 
 <script>
+    import carList from './carlist.vue'
+
     export default {
         name: 'garage',
         data: function() {
@@ -39,7 +44,9 @@
                 gname: '',
                 gbrand: '',
                 gpostal: '',
-                garageData: {}
+                garageData: {},
+                carList: [], 
+                showCarForm: false
             }
         },
         methods: {
@@ -53,7 +60,8 @@
                         self.garageData = data,
                         self.gname = data.name,
                         self.gbrand = data.brand,
-                        self.gpostal = data.postal_country
+                        self.gpostal = data.postal_country,
+                        self.carList = data.cars
                     }
                 });
             },
@@ -93,7 +101,11 @@
         beforeMount(){
             this.gid = this.$route.params.id
             this.showGarage(this.gid)
+        }, 
+        components: {
+            carList
         }  
+
     }
 </script>
 

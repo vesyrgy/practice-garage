@@ -12,6 +12,14 @@ class Garage(BaseModel):
 
     postal_country = ndb.StringProperty()
     
+    def cars(self):
+        from practice.model.car import Car
+        gkey = ndb.Key("Garage", int(self.id))
+        q = Car.query(Car.garage == gkey).fetch()
+        cars = [c for c in q]
+        logging.info("cars: %s " % cars)
+        return cars
+        
 
     #note = ndb.TextProperty(indexed=False)
 
@@ -71,5 +79,8 @@ class Garage(BaseModel):
         # i removed a garages so cache list incorrect
         memcache.delete("garages")
 
-    
+    def to_dict(self):
+        result = super(Garage, self).to_dict()
+        result['id'] = self.id
+        return result
         

@@ -22,28 +22,10 @@ class Car(BaseModel):
         return garage
 
     @classmethod
-    def list(cls, name=None, brand=None, limit=20):
-        if not name and not brand:
-            """ example with caching
-            """
-            cars = memcache.get("cars")
-            if not cars:
-                q = Car.query()
-                cars = [x for x in q]
-                memcache.set("cars", cars)
-            if limit and len(cars) > limit:
-                return cars[:limit]
-            return cars
-
+    def list(cls, garage, name=None, brand=None, limit=20):
         """ example normal query with filter
         """
-        q = Car.query()
-        if name:
-            q = q.filter(Car.name == name)
-        elif brand:
-            q = q.filter(Car.brand == brand)
-        if limit:
-            return q.fetch(limit)
+        q = Car.query(Car.garage == garage.key)
         return [x for x in q]
 
     def fill(self, props):
@@ -59,16 +41,16 @@ class Car(BaseModel):
             self.garage = ndb.Key('Garage', int(props['garageId']))
 
     def save(self):
-        self.put()
+        key = self.put()
         # i changed a car so cache list incorrect
-        memcache.delete("cars")
+        return key
 
     @classmethod
     def add(cls, props):
         c = Car()
         c.fill(props=props)
-        c.save()
-        return c.id
+        new_c = c.save().get()
+        return new_c
         # adding car changes list but handled in the save
 
     def delete(self):

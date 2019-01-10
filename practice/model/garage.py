@@ -12,13 +12,13 @@ class Garage(BaseModel):
 
     postal_country = ndb.StringProperty()
     
-    def cars(self):
-        from practice.model.car import Car
-        gkey = ndb.Key("Garage", int(self.id))
-        q = Car.query(Car.garage == gkey).fetch()
-        cars = [c for c in q]
-        logging.info("cars: %s " % cars)
-        return cars
+    # def cars(self):
+    #     from practice.model.car import Car
+    #     gkey = ndb.Key("Garage", int(self.id))
+    #     q = Car.query(Car.garage == gkey).fetch()
+    #     cars = [c for c in q]
+    #     # logging.info("cars: %s " % cars)
+    #     return cars
         
 
     #note = ndb.TextProperty(indexed=False)
@@ -62,16 +62,19 @@ class Garage(BaseModel):
             self.postal_country = props['postal_country']
 
     def save(self):
-        self.put()
+        key = self.put()
         # i changed a garage so cache list incorrect
         memcache.delete("garages")
+        return key
 
     @classmethod
     def add(cls, props):
         g = Garage()
         g.fill(props=props)
-        g.save()
-        return g.id
+        new_g = g.save().get()
+        logging.info("idnum: %s " % str(new_g.id))
+        return new_g
+        
         # adding garage changes list but handled in the save
 
     def delete(self):

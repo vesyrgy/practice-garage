@@ -47,15 +47,22 @@
       methods: {
         getList: function() {
             var self = this
+            self.loading = true
             $.ajax({
                 method: 'GET',
                 url:'/garages',
                 success: function(data) {
-                    console.log("list gotten")
-                    console.log("data; " + data)
-                    self.garagelist = data
+                    console.log("garagelist gotten")
+                    
                 }
-            });
+            }).done((data) => {
+                self.garagelist = data
+                console.log("data; " + data)
+            }).then((data) => {
+                self.garagelist = data
+            }).always(() => {
+                self.loading = false
+            })
         },
         getGarage: function(id) {
             this.$router.push({ name: 'garage', params: {id} });
@@ -69,20 +76,20 @@
                 url: '/garages',
                 data: { name: self.gname, brand: self.gbrand, postal_country: self.gpostal },
                 timeout: 60000,
-                success: function(data) {
-
-                    self.data = data
+                success: function(returned) {  
+                    console.log("addGarage POST request returned garage with id: " + returned.id)
+                    // self.garagelist.push(returned)
+                    // self.getList()
                 }
             })).done((data) => {
-                self.data = data
-                console.log("id of new garage: " + data.id)
+                self.garagelist.push(data)
             }).then(
-                setTimeout(function() {self.getList()}, 100)
+                self.getList()
             ).always(() => {
                 self.loading = false
             })
                 
-        },
+        }, 
         showModal: function() {
             
         }
@@ -90,10 +97,12 @@
       beforeMount: function() {
         this.getList();
       },
-      created: function() {
+      mounted: function() {
+        console.log("garagelist mounted")
         this.getList();
 				//  eventHub.$on('refreshList', this.getList);
       },
+
       components: {
           Modal
       }

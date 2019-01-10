@@ -3,7 +3,7 @@
         <nav class="nav navbar navbar-header">
             <router-link to="/">Home</router-link>
             <router-link to="/garages">Garages</router-link>
-            <router-link to="/cars">Cars</router-link>
+            <!-- <router-link to="/cars">Cars</router-link> -->
         </nav>
         <router-view/>
     </div>

@@ -18,57 +18,75 @@ class Garages(BasicHandler):
     """
 
     def get(self, key="", topic="", ident=""):
+        logging.warning("Garages.get() called with key: %s, topic: %s, and ident: %s", key, topic, ident)
         if not key:
             garages = Garage.query()
             garages = json.dumps([p.to_dict() for p in Garage.query().fetch()])
-            # garages = json.dumps([ { "id": p.id, "name": p.name } for p in Garage.query().fetch()])
             self.render_json(garages)
-            logging.info('returning garages: %s' % garages)
+            # logging.info('returning garages: %s' % garages)
         else:
             garage = Garage.get(key)
             logging.warning("Got garage " + garage.name)
-            if topic == 'cars': 
-                logging.info('topic is cars')
-                autos = json.dumps([c.to_dict() for c in garage.cars() ])
-                logging.info(autos)
-                self.render_json(autos)
             if not topic:
                 self.render_json(json.dumps(garage.to_dict()))
-            pass
+            elif topic == 'cars': 
+                logging.info('topic is cars')
+                autos = json.dumps([c.to_dict() for c in Car.list(garage) ])
+                logging.info(autos)
+                self.render_json(autos)
+            elif topic == 'car':
+                if ident:
+                    car = Car.get(ident)
+                    logging.info('Got car with id: %s' % car.id)
+                    self.render_json(json.dumps(car.to_dict()))
+                pass
 
     def post(self, key="", topic="", ident=""):
         logging.info('Garages.post called with params: %s' % self.params.params)
         if not key:
-            idnum =  Garage.add(self.params.params)
-            logging.info("Garage with id %s created" % idnum)
-            self.render_json(json.dumps({"id": idnum}))
+            garage = Garage.add(self.params.params)
+            logging.info("Garage with id %s created" % garage.id)
+            self.render_json(json.dumps(garage.to_dict()))
         else:
             if topic == 'cars':
                 logging.info("Garage key is: %s " % key)
-                car_id = Car.add(self.params.params)
-                logging.info("Car with id %s created" % car_id)
-                self.render_json(json.dumps({"car_id": car_id}))
+                car = Car.add(self.params.params)
+                logging.info("Car with id %s created" % car.id)
+                self.render_json(json.dumps(car.to_dict()))
             pass
 
-    def put(self, key="", topic=""):
+    def put(self, key="", topic="", ident=""):
         logging.info('put called with params: %s' % self.params.params)
         if key:
-            g = Garage.get(key)
-            g.fill(self.params.params)
-            g.save()
-            self.render_json(json.dumps({"id": g.id}))
+            if not topic:
+                g = Garage.get(key)
+                g.fill(self.params.params)
+                g.save()
+                self.render_json(json.dumps({"id": g.id}))
+            elif topic == 'car':
+                c = Car.get(ident)
+                c.fill(self.params.params)
+                c.save()
+                self.render_json(json.dumps({"id": c.id}))
         else:
             logging.warning("Cannot update Garage without key.")
             pass
 
 
-    def delete(self, key=""):
-        if key:
-            logging.info('delete called with key: %s' % key)
-            g = Garage.get(key)
-            idnum = g.id
-            g.delete()
-            self.render_json(json.dumps({"id": idnum}))
+    def delete(self, key="", topic="", ident=""):
+        if not topic:
+            if key:
+                logging.info('delete called with key: %s' % key)
+                g = Garage.get(key)
+                idnum = g.id
+                g.delete()
+                self.render_json(json.dumps({"id": idnum}))
+        elif topic == 'car':
+            if ident:
+                c = Car.get(ident)
+                idnum = c.id
+                c.delete()
+                self.render_json(json.dumps({"id": idnum}))
         else:
             logging.warning("Cannot delete Garage without key.")
             pass

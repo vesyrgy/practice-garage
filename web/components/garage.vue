@@ -89,16 +89,19 @@
                     method: 'DELETE',
                     url: '/garages/'+self.gid,
                     timeout: 60000
+                }).done((returned) => {
+                    console.log("garages DELETE request returned: " + returned.id)
                 }).then((data) => {
-                    this.data = data
-                    setTimeout(function() {self.$router.push("/garages");}, 100)
+                    self.$router.push("/garages")
+                    // setTimeout(function() {self.$router.push("/garages");}, 100)
                 }).always(() => {
                     self.loading = false
                 });
             }
             
         }, 
-        beforeMount(){
+        mounted(){
+            console.log("garage mounted")
             this.gid = this.$route.params.id
             this.showGarage(this.gid)
         }, 

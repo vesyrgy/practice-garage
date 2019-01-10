@@ -4,6 +4,7 @@ import Home from '../components/Home'
 import Garages from '../components/garagelist'
 import Garage from '../components/garage'
 import Cars from '../components/carlist'
+import Car from '../components/car'
 
 Vue.use(Router)
 
@@ -23,6 +24,16 @@ export default new Router({
             path: '/garages/:id',
             name: 'garage',
             component: Garage
+        },
+        {
+            path: '/garages/:id/cars',
+            name: 'cars',
+            component: Cars
+        },
+        {
+            path: '/garages/:gid/car/:id',
+            name: 'car',
+            component: Car
         }
     ]
 })

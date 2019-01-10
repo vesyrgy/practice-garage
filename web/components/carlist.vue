@@ -8,7 +8,7 @@
                     <!-- {{c.id}}:  -->
                 </span>
                 <span class="col-2">
-                    <a v-on:click="getCar(c.id)">{{ c.name }}</a>
+                    <a v-on:click="getCar(gid,c.id)">{{ c.name }}</a>
                 </span>
             </li>
             </ul>
@@ -50,15 +50,29 @@ export default {
     methods: {
         getList: function() {
             var self = this
-            $.ajax({
+            var id = self.gid
+            self.loading = true
+            if (id == undefined) {
+                console.log("id is " + id)
+                id = self.$route.params.id
+                console.log("id changed to " + id)
+            }
+            $.when($.ajax({
                 method: 'GET',
-                url:'/garages/'+self.gid+'/cars',
-                success: function(data) {
-                    console.log("list gotten")
-                    console.log("data; " + data)
-                    self.carList = data
+                url:'/garages/'+id+'/cars',
+                success: function(returned) {
+                    console.log("carlist gotten")
+                    console.log("data on success: " + JSON.stringify(returned))
                 }
-            });
+            })).done((returned) => {
+                console.log("data on done: " + returned)
+                self.carList = returned
+            }).then((returned) => {
+                console.log("data on then: " + returned)
+                self.carList = returned
+            }).always(() => {
+                self.loading = false
+            })
         },
         hideForm(event) {
             this.showForm = false
@@ -74,7 +88,6 @@ export default {
                 data: { name: self.cname, brand: self.cbrand, kenteken: self.ckenteken, color: self.ccolor, garageId: self.gid },
                 timeout: 60000,
                 success: function(data) {
-
                     self.data = data
                 }
             })).done((data) => {
@@ -85,15 +98,25 @@ export default {
             ).always(() => {
                 self.loading = false
             })
-
+        }, 
+        getCar: function(gid, id) {
+            if( gid == undefined) {
+                gid = this.$route.params.gid
+            }
+            console.log("this.gid: " + gid)
+            this.$router.push({ name: 'car', params: {gid,id} });
         }
     },
     beforeMount: function() {
-        this.getList();
-      },
-      created: function() {
-        this.getList();
-    }
+        this.getList()
+        console.log("beforeMount of carlist")
+        console.log("carlist is: " + JSON.stringify(this.carlist))
+    },
+    mounted: function() {
+        console.log("carlist mounted")
+        setTimeout(function() {this.getList()}, 100)
+    },
+
 }
 </script>
 

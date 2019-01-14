@@ -21,24 +21,24 @@ class Garages(BasicHandler):
         logging.warning("Garages.get() called with key: %s, topic: %s, and ident: %s", key, topic, ident)
         if not key:
             garages = Garage.query()
-            garages = json.dumps([p.to_dict() for p in Garage.query().fetch()])
+            garages = json.dumps([self.to_dict(p) for p in Garage.query().fetch()])
             self.render_json(garages)
             # logging.info('returning garages: %s' % garages)
         else:
             garage = Garage.get(key)
             logging.info("Got garage: %s " % garage.name)
             if not topic:
-                self.render_json(json.dumps(garage.to_dict()))
+                self.render_json(json.dumps(self.to_dict(garage)))
             elif topic == 'cars': 
                 logging.info('Getting the is of cars...')
-                autos = json.dumps([c.to_dict() for c in Car.list(garage) ])
+                autos = json.dumps([self.to_dict(c) for c in Car.list(garage,None) ])
                 logging.info(autos)
                 self.render_json(autos)
             elif topic == 'car':
                 if ident:
                     car = Car.get(ident)
                     logging.info('Got car with id: %s' % car.id)
-                    self.render_json(json.dumps(car.to_dict()))
+                    self.render_json(json.dumps(self.to_dict(car)))
                 pass
 
     def post(self, key="", topic="", ident=""):
@@ -46,7 +46,7 @@ class Garages(BasicHandler):
         if not key:
             garage = Garage.add(self.params.params)
             logging.info("Garage with id %s created" % garage.id)
-            self.render_json(json.dumps(garage.to_dict()))
+            self.render_json(json.dumps(self.to_dict(garage)))
         else:
             if not topic:
                 logging.warning("No topic specified for Garage with key: %s" % key)
@@ -54,7 +54,7 @@ class Garages(BasicHandler):
                 logging.info("Garage key is: %s " % key)
                 car = Car.add(self.params.params)
                 logging.info("Car with id %s created" % car.id)
-                self.render_json(json.dumps(car.to_dict()))
+                self.render_json(json.dumps(self.to_dict(car)))
             else:
                 logging.warning("Cannot complete post request for topic: %s" % topic)
                 pass
@@ -94,5 +94,13 @@ class Garages(BasicHandler):
         else:
             logging.warning("Cannot delete Garage without key.")
             pass
-
+    
+    def to_dict(self,obj):
+        result = obj.to_dict()
+        result['id'] = obj.id
+        if hasattr(obj, 'garage') and obj.garage:
+            result['garage'] = obj.garage.get().id
+        if hasattr(obj, 'contact') and obj.contact:
+            result['contact'] = obj.contact.get().id
+        return result
 

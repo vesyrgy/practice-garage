@@ -2,6 +2,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import memcache
 from practice.system.base.model import BaseModel
 from practice.model.garage import Garage
+from practice.model.contact import Contact
 import logging
 
 class Car(BaseModel):
@@ -10,6 +11,7 @@ class Car(BaseModel):
     kenteken = ndb.StringProperty(required=True)
     color = ndb.StringProperty()
     garage = ndb.KeyProperty(kind=Garage, required=True)
+    contact = ndb.KeyProperty(kind=Contact)
 
     @classmethod
     def get(cls,key):
@@ -22,10 +24,14 @@ class Car(BaseModel):
         return garage
 
     @classmethod
-    def list(cls, garage, name=None, brand=None, limit=20):
-        """ example normal query with filter
-        """
-        q = Car.query(Car.garage == garage.key)
+    def list(cls, garage=None, contact=None, limit=20):
+        if garage == None and contact == None:
+            raise
+        elif garage:
+            q = Car.query(Car.garage == garage.key)
+        elif contact:
+            q = Car.query(Car.contact == contact.key)
+
         return [x for x in q]
 
     def fill(self, props):
@@ -57,9 +63,3 @@ class Car(BaseModel):
         self.key.delete()
         # i removed a car so cache list incorrect
         memcache.delete("cars")
-
-    def to_dict(self):
-        result = super(Car, self).to_dict()
-        result['garage'] = self.garage.get().id
-        result['id'] = self.id
-        return result

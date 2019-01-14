@@ -72,8 +72,4 @@ class Garage(BaseModel):
         # i removed a garages so cache list incorrect
         memcache.delete("garages")
 
-    def to_dict(self):
-        result = super(Garage, self).to_dict()
-        result['id'] = self.id
-        return result
         

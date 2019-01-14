@@ -15,7 +15,7 @@
         <div id="garages" class="row" v-if="!showGarageForm">  
             <ul class="list-group">
                 <li class="garage-item" v-for="(g, index) in garagelist" :key="index">
-                    <span class="col-2">
+                    <span>
                         <router-link class="list-group-item" v-bind:to="{ name: 'garage', params: { id: g.id }}">{{ g.name }}</router-link>
                     </span>
                 </li>
@@ -34,7 +34,6 @@
       data: function () {
         return {
             // showModal: false,
-            hover: false,
             showGarageForm: false,
             fType: 'Add',
             garagelist: []
@@ -51,10 +50,10 @@
                     console.log("garagelist gotten")
                 }
             }).done((data) => {
-                self.garagelist = data
                 // console.log("data; " + data)
             }).then((data) => {
                 // self.garagelist = data
+                self.garagelist = data
             }).always(() => {
                 self.loading = false
             })

@@ -1,18 +1,19 @@
 <template>
-    <div class="garage">
-        <div v-if="!showGarageForm" class="row">
-                <h3>Garage: {{gname}}</h3>
-                <p>Deze garage heeft id: {{gid}}</p>
-                <h4>Merk: {{garageData.name}}</h4>
-                <h4>Land: {{gpostal}}</h4>
-                <car-list :carlist="carList" :gid="gid" :gname="gname" :showCarForm="showCarForm" @hideForm="showCarForm = $event"></car-list>
-        </div>
+    <div class="garage col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="row">
+            <router-link class="row" v-bind:to="{ name: 'garages'}">Terug naar de garages</router-link>
+        </div>
+        <div v-if="showGarageForm==false" class="row">
+                <h3>Garage: {{gname}}</h3>
+                <p>Id: {{gid}}</p>
+                <h4>Merk: {{garageData.brand}}</h4>
+                <h4>Land: {{gpostal}}</h4>
+                <car-list :carlist="carList" :gid="gid" :gname="gname" :showCarForm="showCarForm" @showCarForm="showCarForm = $event" @hideForm="showCarForm = false"></car-list>
+        </div>
+        <div v-if="showGarageForm==false && showCarForm==false" class="row">
                 
-            <button type="button" class="btn btn-default btn-danger" id="delete" @click='deleteGarage()'>Verwijderen</button> 
-                
-            <button type="button" class="btn btn-default btn-primary" id="editGarage" @click='showGarageForm=true'>Bewerken</button>
-                
+            <button type="button" class="btn btn-default btn-danger" id="delete" @click='deleteGarage()'>Garage Verwijderen</button> 
+            <button type="button" class="btn btn-default btn-primary" id="editGarage" @click='showGarageForm=true'>Garage Bewerken</button>
         </div>
         <div v-if="showGarageForm">
             <garage-form :gid="gid" :gDataProp="garageData" @childWasChanged="updateGarage($event)" :formType="fType" :showFormProp="showGarageForm" @formVisibilityChanged="showGarageForm = $event">
@@ -42,8 +43,9 @@
         },
         methods: {
             showGarage: function(id) {
+                console.log("showGarage called")
                 var self = this
-                $.ajax({
+                $.when($.ajax({
                     method: 'GET',
                     url:'/garages/'+id,
                     success: function(data) {
@@ -54,24 +56,30 @@
                         // self.gbrand = data.brand
                         // self.gpostal = data.postal_country
                     }
-                }).done((data) => {
-
+                })).done((data) => {
+                    
                 });
 
             },
             deleteGarage: function() {
                 var self = this
                 self.loading = true
-                $.ajax({
+                $.when($.ajax({
                     method: 'DELETE',
                     url: '/garages/'+self.gid,
-                    timeout: 60000
-                }).done((returned) => {
+                    timeout: 60000,
+                    success: function(data) {
+                        console.log("DELETE was successful.")
+                    }
+                })).done((returned) => {
                     console.log("garages DELETE request returned: " + returned.id)
                 }).then((data) => {
-                    // self.$router.push("/garages")
-                    // blijkbaar gaat het mis met de update als je niet even wacht :\
-                    setTimeout(function() {self.$router.push("/garages");}, 200)
+                    self.gid = ''
+                    console.log("calling this.$router.go({ name: 'garages'})")
+                    // self.$router.push({ name: 'garages' })
+
+                    // blijkbaar gaat het soms mis met de update als je niet even wacht :\
+                    setTimeout(function() {self.$router.push("/garages")}, 200)
                 }).always(() => {
                     self.loading = false
                 });
@@ -79,15 +87,16 @@
             updateGarage: function(event) {
                 console.log("update garage called")
                 this.garageData = event
-                console.log("event.name: " + event.name)
+                
                 this.gname = event.name
                 this.gbrand = event.brand
                 this.gpostal = event.postal_country
+                // console.log("garageData.name: " + this.gname)
             }
             
         }, 
-        mounted(){
-            console.log("garage mounted")
+        created() {
+            // console.log("garage created")
             this.gid = this.$route.params.id
             this.showGarage(this.gid)
         }, 

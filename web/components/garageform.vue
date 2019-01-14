@@ -82,12 +82,12 @@ export default {
         saveGarage: function() {
             var self = this
             self.loading = true
-            $.ajax({
+            $.when($.ajax({
                 method: 'PUT',
                 url: '/garages/'+self.gid,
                 data: { name: self.gDataProp.name, brand: self.gDataProp.brand, postal_country: self.gDataProp.postal_country },
                 timeout: 60000
-            }).then((data) => {
+            })).then((data) => {
                 this.$options.unchanged = data
                 // self.hideForm()
                 console.log("hiding form...")

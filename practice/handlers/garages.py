@@ -26,11 +26,11 @@ class Garages(BasicHandler):
             # logging.info('returning garages: %s' % garages)
         else:
             garage = Garage.get(key)
-            logging.warning("Got garage " + garage.name)
+            logging.info("Got garage: %s " % garage.name)
             if not topic:
                 self.render_json(json.dumps(garage.to_dict()))
             elif topic == 'cars': 
-                logging.info('topic is cars')
+                logging.info('Getting the is of cars...')
                 autos = json.dumps([c.to_dict() for c in Car.list(garage) ])
                 logging.info(autos)
                 self.render_json(autos)
@@ -48,16 +48,22 @@ class Garages(BasicHandler):
             logging.info("Garage with id %s created" % garage.id)
             self.render_json(json.dumps(garage.to_dict()))
         else:
-            if topic == 'cars':
+            if not topic:
+                logging.warning("No topic specified for Garage with key: %s" % key)
+            elif topic == 'cars':
                 logging.info("Garage key is: %s " % key)
                 car = Car.add(self.params.params)
                 logging.info("Car with id %s created" % car.id)
                 self.render_json(json.dumps(car.to_dict()))
-            pass
+            else:
+                logging.warning("Cannot complete post request for topic: %s" % topic)
+                pass
 
     def put(self, key="", topic="", ident=""):
         logging.info('put called with params: %s' % self.params.params)
-        if key:
+        if not key:
+            logging.warning("Cannot update Garage without key.")
+        else:
             if not topic:
                 g = Garage.get(key)
                 g.fill(self.params.params)
@@ -68,8 +74,6 @@ class Garages(BasicHandler):
                 c.fill(self.params.params)
                 c.save()
                 self.render_json(json.dumps({"id": c.id}))
-        else:
-            logging.warning("Cannot update Garage without key.")
             pass
 
 

@@ -1,8 +1,9 @@
 <template>
-    <div>
-        <div v-if="showCarForm==false" class="row">
-            <router-link >Terug naar de garage</router-link>
+    <div class="car col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="row">
             <router-link v-bind:to="{ name: 'garage', params: { id: gid }}">Terug naar de garage</router-link>
+        </div>
+        <div v-if="showCarForm==false" class="row">
             <h4>Naam: {{cname}}</h4>
             <h4>Merk: {{cbrand}}</h4>
             <h4>Kenteken: {{ckenteken}}</h4>
@@ -10,13 +11,12 @@
             <p>Deze auto heeft id: {{cid}}</p>
         </div>
         <div v-if="showCarForm==false" class="row">
-            <button type="button" class="btn btn-default btn-danger" id="delete" @click='deleteCar()'>Verwijderen</button> 
-            <button type="button" class="btn btn-default btn-primary" id="editGarage" @click="showCarForm=true">Bewerken</button>
+            <button type="button" class="btn btn-default btn-danger" id="delete" @click='deleteCar()'>Auto Verwijderen</button> 
+            <button type="button" class="btn btn-default btn-primary" id="editGarage" @click="showCarForm=true">Auto Bewerken</button>
         </div>
 
         <div class="row">
-            <car-form v-bind="cData" v-if="showCarForm==true" @hideCarForm="showCarForm=false" :formType="fType"></car-form>
-            <!-- <garage-form :gid="gid" :gDataProp="garageData" @childWasChanged="updateGarage($event)" :formType="fType" :showFormProp="showGarageForm" @formVisibilityChanged="showGarageForm = $event"> -->
+            <car-form v-bind="cData" v-if="showCarForm==true" @hideForm="showCarForm=false" :formType="fType"></car-form>
         </div>
     </div>
 
@@ -61,34 +61,14 @@
                     self.loading = false
                 })
             },
-            saveCar: function() {
-                var self = this
-                self.loading = true
-                $.when($.ajax({
-                    method: 'PUT',
-                    url: '/garages/'+self.gid+'/car/'+self.cid,
-                    data: { name: self.cname, brand: self.cbrand, kenteken: self.ckenteken, color: self.ckleur, garageId: self.gid },
-                    timeout: 60000
-                })).done((data) => {
-
-                }).then((data) => {
-                    self.showCarForm = false;
-                    // self.cData = data
-                    console.log("calling getCar()")
-                    self.getCar()
-                }).always(() => {
-                    self.loading = false
-                });   
-            
-            },
             deleteCar: function() {
                 var self = this
                 self.loading = true
-                $.ajax({
+                $.when($.ajax({
                     method: 'DELETE',
                     url: '/garages/'+self.gid+'/car/'+self.cid,
                     timeout: 60000
-                }).done((returned) => {
+                })).done((returned) => {
                     console.log("car DELETE request returned: " + returned.id)
                 }).then((data) => {
                     var id = self.gid
@@ -98,8 +78,9 @@
                         console.log("id changed to " + id)
                     }
                     console.log("calling 'cars' with id: " + id)
-                    // self.$router.push({ name: 'cars', params: {id} })
-                    setTimeout(function() {self.$router.push("/garages/"+id);}, 100)
+                    // self.$router.go({ name: 'cars', params: {id} })
+                    // blijkbaar werkt dit niet goed zonder eventjes te wachten
+                    setTimeout(function() {self.$router.push("/garages/"+id);}, 200)
                 }).always(() => {
                     self.loading = false
                 });
@@ -113,7 +94,6 @@
         },
         components: {
             'car-form': CarForm
-            // editObject
         }
     }
 </script>

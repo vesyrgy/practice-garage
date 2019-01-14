@@ -1,13 +1,13 @@
 from practice.handlers import BasicHandler
-from practice.model.garage import Garage
 from practice.model.car import Car
+from practice.model.contact import Contact
 import json
 import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
-class Cars(BasicHandler):
+class Contacts(BasicHandler):
     """ Handler for Car
 
         Supports up to 3 parameters
@@ -15,3 +15,7 @@ class Cars(BasicHandler):
         topic = what you want to do
         ident = Can be id of another class as child from Garage
     """
+    def put(self, key=""):
+        
+
+        

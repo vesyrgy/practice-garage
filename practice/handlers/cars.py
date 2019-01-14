@@ -24,9 +24,6 @@ class Cars(BasicHandler):
             c.fill(self.params.params)
             c.save()
             self.render_json(json.dumps({"id": c.id}))
-            
-            pass
-
 
     def delete(self, key=""):
         if not key:

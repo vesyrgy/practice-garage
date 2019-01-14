@@ -31,5 +31,5 @@ app = webapp2.WSGIApplication([
     ('/garages', Garages),
     ('/garages/(.*)/(.*)/(.*)', Garages),
     ('/garages/(.*)/(.*)', Garages),
-    ('/garages/(.*)', Garages)
+    ('/garages/(.*)', Garages),
     ], debug=True)

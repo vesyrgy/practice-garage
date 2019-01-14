@@ -10,12 +10,15 @@
             <h4>Kleur: {{ckleur}}</h4>
             <p>Deze auto heeft id: {{cid}}</p>
         </div>
-        <div v-if="showCarForm==false" class="row">
+        <div class="row form-group">
+            <contact :contact="contact"></contact>
+        </div>
+        <div v-if="showCarForm==false" class="row form-group">
             <button type="button" class="btn btn-default btn-danger" id="delete" @click='deleteCar()'>Auto Verwijderen</button> 
             <button type="button" class="btn btn-default btn-primary" id="editGarage" @click="showCarForm=true">Auto Bewerken</button>
         </div>
 
-        <div class="row">
+        <div class="row form-group">
             <car-form v-bind="cData" v-if="showCarForm==true" @hideForm="showCarForm=false" :formType="fType"></car-form>
         </div>
     </div>
@@ -24,6 +27,7 @@
 
 <script>
     import CarForm from './carform.vue'
+    import Contact from './contact.vue'
 
     export default {
         name: 'car',
@@ -36,6 +40,7 @@
                 cbrand:'',
                 ckenteken:'',
                 ckleur: '',
+                contact: '',
                 gid: this.$route.params.gid,
                 fType: 'Save'
             }
@@ -55,6 +60,7 @@
                     self.cbrand = data.brand
                     self.ckenteken = data.kenteken
                     self.ckleur = data.color
+                    self.contact = data.contact
                 }).then((data) => {
                     self.cData = data
                 }).always(() => {
@@ -93,7 +99,8 @@
             console.log("car mounted")
         },
         components: {
-            'car-form': CarForm
+            'car-form': CarForm,
+            'contact': Contact
         }
     }
 </script>

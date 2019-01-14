@@ -23,6 +23,7 @@ export default new Router({
         {
             path: '/garages/:id',
             name: 'garage',
+            meta: {linkText: "Garage"},
             component: Garage
         },
         {

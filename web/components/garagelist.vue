@@ -1,35 +1,32 @@
 <template>
-	
-    <div>
-		<h1>Garages</h1>
-        <!-- <button class="btn btn-default btn-primary" v-on:click="showModal = true">Add Garage (via modal)</button>
-        <modal v-if="showModal" v-on:close="showModal = false"></modal> -->
-
-        <button v-if="!showForm" class="btn btn-default btn-primary" v-on:click="showForm = true">Add Garage</button>
-        <form class="addGarageForm" v-if="showForm">
-            <input v-model='gname' type="text" class="form-control" placeholder="Enter name"> 
-            <input v-model='gbrand' type="text" class="form-control" placeholder="Enter brand"> 
-            <input v-model='gpostal' type="text" class="form-control" placeholder="Enter postal country"> 
-            <button type="button" class="btn btn-default btn-secondary modal-default-button" id ="cancel" v-on:click="showForm = false">Cancel</button>
-            <button type="button" class="btn btn-default btn-primary" id="addGarage" v-on:click='addGarage()'>Add</button> 
-        </form>
-        <div id="garages" class="panel well col-xs-12">    
-            <ul>
+	<div>
+        <div class="row">
+            
+            <h1>Garages</h1>
+        </div>
+        <div class="row">
+            <!-- <button class="btn btn-default btn-primary" v-on:click="showModal = true">Add Garage (via modal)</button>
+            <modal v-if="showModal" v-on:close="showModal = false"></modal> -->
+            <button v-if="!showGarageForm" class="btn btn-default btn-primary" v-on:click="showGarageForm = true">Add Garage</button>
+        </div>
+        <div class="row">   
+            <garage-form v-bind:formType="fType" v-if="showGarageForm" @formVisibilityChanged="showGarageForm = $event"></garage-form>
+        </div>
+        <div id="garages" class="row" v-if="!showGarageForm">  
+            <ul class="list-group">
                 <li class="garage-item" v-for="(g, index) in garagelist" :key="index">
-                    <span class="col-1">
-                        <!-- {{g.id}}:  -->
-                    </span>
                     <span class="col-2">
-                        <a v-on:click="getGarage(g.id)">{{ g.name }}</a>
+                        <router-link class="list-group-item" v-bind:to="{ name: 'garage', params: { id: g.id }}">{{ g.name }}</router-link>
                     </span>
                 </li>
-            </ul>
-        </div>    
-	</div>
+            </ul>  
+        </div>
+    </div>
 </template>
 
 <script>
     import Modal from './modal.vue'
+    import GarageForm from './garageform.vue'
 
 	//  import eventHub from './eventHub.vue'
     export default {
@@ -37,10 +34,9 @@
       data: function () {
         return {
             // showModal: false,
-            gname: '',
-            gbrand: '',
-            gpostal: '',
-            showForm: false,
+            hover: false,
+            showGarageForm: false,
+            fType: 'Add',
             garagelist: []
         }
       },
@@ -53,43 +49,16 @@
                 url:'/garages',
                 success: function(data) {
                     console.log("garagelist gotten")
-                    
                 }
             }).done((data) => {
                 self.garagelist = data
-                console.log("data; " + data)
+                // console.log("data; " + data)
             }).then((data) => {
-                self.garagelist = data
+                // self.garagelist = data
             }).always(() => {
                 self.loading = false
             })
         },
-        getGarage: function(id) {
-            this.$router.push({ name: 'garage', params: {id} });
-        },
-        addGarage: function() {
-            var self = this
-            self.showForm = false
-            self.loading = true
-            $.when($.ajax({
-                method: 'POST',
-                url: '/garages',
-                data: { name: self.gname, brand: self.gbrand, postal_country: self.gpostal },
-                timeout: 60000,
-                success: function(returned) {  
-                    console.log("addGarage POST request returned garage with id: " + returned.id)
-                    // self.garagelist.push(returned)
-                    // self.getList()
-                }
-            })).done((data) => {
-                self.garagelist.push(data)
-            }).then(
-                self.getList()
-            ).always(() => {
-                self.loading = false
-            })
-                
-        }, 
         showModal: function() {
             
         }
@@ -104,7 +73,7 @@
       },
 
       components: {
-          Modal
+          'garage-form': GarageForm
       }
     }
 
@@ -112,12 +81,7 @@
 </script>
 
 <style>
-    ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
-    #cancel {
+    /* #cancel {
         color: gray;
         float: left;
     }
@@ -126,5 +90,5 @@
     }
     .addGarageForm {
         grid-column: 2 / span 3;
-    }
+    } */
 </style>

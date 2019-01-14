@@ -1,68 +1,62 @@
 <template>
     <div>
-        <h4>Naam: {{cname}}</h4>
-        <h4>Merk: {{cbrand}}</h4>
-        <h4>Kenteken: {{ckenteken}}</h4>
-        <h4>Kleur: {{ckleur}}</h4>
-        <p>Deze auto heeft id: {{cid}}</p>
-        
-        <div v-if="!edit" class="btn-group">
-            <button type="button" class="btn btn-default btn-danger" id="delete" v-on:click='deleteCar()'>Verwijderen</button> 
-            <button type="button" class="btn btn-default btn-primary" id="editGarage" v-on:click='edit=true'>Bewerken</button>
+        <div v-if="showCarForm==false" class="row">
+            <router-link >Terug naar de garage</router-link>
+            <router-link v-bind:to="{ name: 'garage', params: { id: gid }}">Terug naar de garage</router-link>
+            <h4>Naam: {{cname}}</h4>
+            <h4>Merk: {{cbrand}}</h4>
+            <h4>Kenteken: {{ckenteken}}</h4>
+            <h4>Kleur: {{ckleur}}</h4>
+            <p>Deze auto heeft id: {{cid}}</p>
         </div>
-    
-        <form class="addCarForm" v-if="edit">
-            <label for="naam">Naam</label>
-            <input id="naam" v-model='cname' type="text" class="form-control" v-bind:placeholder="cname">
-            <label for="merk">Merk</label>
-            <input id="merk" v-model='cbrand' type="text" class="form-control" v-bind:placeholder="cbrand">
-            <label for="kenteken">Kenteken</label>
-            <input id="kenteken" v-model='ckenteken' type="text" class="form-control" v-bind:placeholder="ckenteken">
-            <label for="color">Kleur</label>
-            <input id="color" v-model='ckleur' type="text" class="form-control" v-bind:placeholder="ckleur"> 
-            <div class="btn-group">
-                <button type="button" class="left btn btn-default btn-secondary modal-default-button" id ="cancel" v-on:click='edit=false'>Cancel</button>
-                <button type="button" class="right btn btn-default btn-primary" id="save" v-on:click='saveCar()'>Opslaan</button> 
-            </div>
-        </form>
+        <div v-if="showCarForm==false" class="row">
+            <button type="button" class="btn btn-default btn-danger" id="delete" @click='deleteCar()'>Verwijderen</button> 
+            <button type="button" class="btn btn-default btn-primary" id="editGarage" @click="showCarForm=true">Bewerken</button>
+        </div>
 
-        <!-- <editObject></editObject> -->
-    
+        <div class="row">
+            <car-form v-bind="cData" v-if="showCarForm==true" @hideCarForm="showCarForm=false" :formType="fType"></car-form>
+            <!-- <garage-form :gid="gid" :gDataProp="garageData" @childWasChanged="updateGarage($event)" :formType="fType" :showFormProp="showGarageForm" @formVisibilityChanged="showGarageForm = $event"> -->
+        </div>
     </div>
 
 </template>
 
 <script>
+    import CarForm from './carform.vue'
+
     export default {
         name: 'car',
         data: function() {
             return {
-                edit: false,
+                showCarForm: false,
+                cData: {},                
+                cid: this.$route.params.id,
                 cname:'',
                 cbrand:'',
                 ckenteken:'',
                 ckleur: '',
-                cid: this.$route.params.id,
-                gid: this.$route.params.gid
+                gid: this.$route.params.gid,
+                fType: 'Save'
             }
         }, 
         methods: {
             getCar: function() {
                 var self = this
                 self.loading = true
-                $.ajax({
+                $.when($.ajax({
                     method: 'GET',
                     url:'/garages/'+self.gid+'/car/'+self.cid,
                     success: function(data) {
                         console.log("car gotten")
                     }
-                }).done((data) => {
+                })).done((data) => {
                     self.cname = data.name
                     self.cbrand = data.brand
                     self.ckenteken = data.kenteken
                     self.ckleur = data.color
                 }).then((data) => {
-                    self.data = data
+                    self.cData = data
                 }).always(() => {
                     self.loading = false
                 })
@@ -70,14 +64,16 @@
             saveCar: function() {
                 var self = this
                 self.loading = true
-                $.ajax({
+                $.when($.ajax({
                     method: 'PUT',
                     url: '/garages/'+self.gid+'/car/'+self.cid,
                     data: { name: self.cname, brand: self.cbrand, kenteken: self.ckenteken, color: self.ckleur, garageId: self.gid },
                     timeout: 60000
+                })).done((data) => {
+
                 }).then((data) => {
-                    self.edit = false;
-                    this.data = data
+                    self.showCarForm = false;
+                    // self.cData = data
                     console.log("calling getCar()")
                     self.getCar()
                 }).always(() => {
@@ -116,6 +112,7 @@
             console.log("car mounted")
         },
         components: {
+            'car-form': CarForm
             // editObject
         }
     }

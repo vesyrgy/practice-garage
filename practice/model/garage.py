@@ -30,17 +30,7 @@ class Garage(BaseModel):
 
     @classmethod
     def list(cls, name=None, brand=None, limit=20):
-        if not name and not brand:
-            """ example with caching
-            """
-            garages = memcache.get("garages")
-            if not garages:
-                q = Garage.query()
-                garages = [x for x in q]
-                memcache.set("garages", garages)
-            if limit and len(garages) > limit:
-                return garages[:limit]
-            return garages
+        
 
         """ example normal query with filter
         """

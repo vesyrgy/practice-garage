@@ -17,6 +17,11 @@ class Car(BaseModel):
     def get(cls,key):
         logging.info("Getting Car with key: %s" % key)
         return ndb.Key("Car", int(key)).get()
+    
+    def setContact(self,key):
+        self.contact = key
+        # logging.info("Car contact has been set to contact with id: %s" % self.contact.get().id)
+        return self.save()
 
     def getGarage(self):
         garage = self.garage.get()
@@ -45,6 +50,8 @@ class Car(BaseModel):
             self.color = props['color']
         if 'garageId' in props:
             self.garage = ndb.Key('Garage', int(props['garageId']))
+        if 'contactId' in props:
+            self.contact = ndb.Key(Contact, int(props['contactId']))
 
     def save(self):
         key = self.put()

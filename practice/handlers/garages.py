@@ -30,7 +30,7 @@ class Garages(BasicHandler):
             if not topic:
                 self.render_json(json.dumps(self.to_dict(garage)))
             elif topic == 'cars': 
-                logging.info('Getting the is of cars...')
+                logging.info('Getting the ids of cars...')
                 autos = json.dumps([self.to_dict(c) for c in Car.list(garage,None) ])
                 logging.info(autos)
                 self.render_json(autos)
@@ -39,7 +39,7 @@ class Garages(BasicHandler):
                     car = Car.get(ident)
                     logging.info('Got car with id: %s' % car.id)
                     self.render_json(json.dumps(self.to_dict(car)))
-                pass
+                
 
     def post(self, key="", topic="", ident=""):
         logging.info('Garages.post called with params: %s' % self.params.params)
@@ -54,10 +54,10 @@ class Garages(BasicHandler):
                 logging.info("Garage key is: %s " % key)
                 car = Car.add(self.params.params)
                 logging.info("Car with id %s created" % car.id)
-                self.render_json(json.dumps(self.to_dict(car)))
+                self.render_json(json.dumps(self.to_dict(car)))            
             else:
                 logging.warning("Cannot complete post request for topic: %s" % topic)
-                pass
+                
 
     def put(self, key="", topic="", ident=""):
         logging.info('put called with params: %s' % self.params.params)
@@ -74,7 +74,7 @@ class Garages(BasicHandler):
                 c.fill(self.params.params)
                 c.save()
                 self.render_json(json.dumps({"id": c.id}))
-            pass
+            
 
 
     def delete(self, key="", topic="", ident=""):
@@ -93,8 +93,8 @@ class Garages(BasicHandler):
                 self.render_json(json.dumps({"id": idnum}))
         else:
             logging.warning("Cannot delete Garage without key.")
-            pass
-    
+            
+
     def to_dict(self,obj):
         result = obj.to_dict()
         result['id'] = obj.id

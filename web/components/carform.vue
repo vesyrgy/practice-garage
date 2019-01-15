@@ -83,6 +83,7 @@
                 })).done((data) => {
                     console.log("car with id " + data.id + " was modified.")
                 }).then((data) => {
+                    // FIXME: get rid of call to $parent
                     self.$parent.getCar()
                     console.log("calling getCar()")
                     self.$emit('hideForm')

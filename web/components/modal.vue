@@ -1,7 +1,6 @@
 <template>
     <transition name="modal">
         <div class="modal-mask">
-            <p>werkt dit al?</p>
             <div class="modal-wrapper">
                 <div class="modal-container">
                     <form class="panel well">

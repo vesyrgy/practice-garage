@@ -1,7 +1,7 @@
 import webapp2
 from webapp2_extras import jinja2
 from practice.handlers.garages import Garages
-# from practice.handlers.cars import Cars
+from practice.handlers.contacts import Contacts
 from practice.handlers.home import HomePage
 import re
 
@@ -32,4 +32,6 @@ app = webapp2.WSGIApplication([
     ('/garages/(.*)/(.*)/(.*)', Garages),
     ('/garages/(.*)/(.*)', Garages),
     ('/garages/(.*)', Garages),
+    ('/contacts', Contacts),
+    ('/contacts/(.*)/(.*)', Contacts)
     ], debug=True)

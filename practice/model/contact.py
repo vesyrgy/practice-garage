@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Contact(BaseModel):
     naam = ndb.StringProperty(required=True)
-    huisnummer = ndb.IntegerProperty(required=True)
+    huisnummer = ndb.StringProperty(required=True)
     straat = ndb.StringProperty()
     postcode = ndb.StringProperty(required=True)
     plaats = ndb.StringProperty()
@@ -27,8 +27,8 @@ class Contact(BaseModel):
             self.straat = props['straat']
         if 'postcode' in props:
             self.postcode = props['postcode']
-        if 'plaat' in props:
-                self.plaats = props['plaats']
+        if 'plaats' in props:
+            self.plaats = props['plaats']
         pass
     
     def save(self):
@@ -40,6 +40,7 @@ class Contact(BaseModel):
         c = Contact()
         c.fill(props = props)
         new_c = c.save().get()
+        #   TODO adding a new Contact should update the contact on the car 
         return new_c
 
     def delete(self):

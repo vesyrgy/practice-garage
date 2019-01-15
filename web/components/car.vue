@@ -11,7 +11,7 @@
             <p>Deze auto heeft id: {{cid}}</p>
         </div>
         <div class="row form-group">
-            <contact :contact="contact"></contact>
+            <contact :contact_id="contact" :car_id="cid"></contact>
         </div>
         <div v-if="showCarForm==false" class="row form-group">
             <button type="button" class="btn btn-default btn-danger" id="delete" @click='deleteCar()'>Auto Verwijderen</button> 
@@ -51,7 +51,7 @@
                 self.loading = true
                 $.when($.ajax({
                     method: 'GET',
-                    url:'/garages/'+self.gid+'/car/'+self.cid,
+                    url:`/garages/${self.gid}/car/${self.cid}`,
                     success: function(data) {
                         console.log("car gotten")
                     }

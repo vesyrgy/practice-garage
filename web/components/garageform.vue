@@ -93,6 +93,7 @@ export default {
                 console.log("hiding form...")
                 self.hideForm()
                 console.log("calling self.$parent.showGarage() with " + self.gid)
+                // FIXME: get rid of call to $parent
                 self.$parent.showGarage(self.gid)
                 
             }).always(() => {

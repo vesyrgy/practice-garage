@@ -36,3 +36,4 @@ class Cars(BasicHandler):
             self.render_json(json.dumps({"id": idnum}))
 
             pass
+    

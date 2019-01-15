@@ -3,11 +3,13 @@
         <div class="row">
             <router-link class="row" v-bind:to="{ name: 'garages'}">Terug naar de garages</router-link>
         </div>
-        <div v-if="showGarageForm==false" class="row">
+        <div class="row">
                 <h3>Garage: {{gname}}</h3>
                 <p>Id: {{gid}}</p>
                 <h4>Merk: {{garageData.brand}}</h4>
                 <h4>Land: {{gpostal}}</h4>
+        </div>
+        <div v-if="showGarageForm==false" class="row">
                 <car-list :carlist="carList" :gid="gid" :gname="gname" :showCarForm="showCarForm" @showCarForm="showCarForm = $event" @hideForm="showCarForm = false"></car-list>
         </div>
         <div v-if="showGarageForm==false && showCarForm==false" class="row">
@@ -44,12 +46,14 @@
         methods: {
             showGarage: function(id) {
                 console.log("showGarage called")
+                console.log(`GET /garages/${id}`)
                 var self = this
                 $.when($.ajax({
                     method: 'GET',
-                    url:'/garages/'+id,
+                    url:`/garages/${id}`,
                     success: function(data) {
                         console.log("success")
+
                         self.updateGarage(data)
                         self.carList = data.cars
                         // self.gname = data.name
@@ -66,7 +70,7 @@
                 self.loading = true
                 $.when($.ajax({
                     method: 'DELETE',
-                    url: '/garages/'+self.gid,
+                    url: `/garages/${self.gid}`,
                     timeout: 60000,
                     success: function(data) {
                         console.log("DELETE was successful.")

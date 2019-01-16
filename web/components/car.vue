@@ -80,7 +80,7 @@
                 self.loading = true
                 $.when($.ajax({
                     method: 'DELETE',
-                    url: `/garages/${self.gid}/${car/self.cid}`,
+                    url: `/garages/${self.gid}/car/${self.cid}`,
                     timeout: 60000
                 })).done((returned) => {
                     console.log(`car DELETE request returned: ${returned.id}`)

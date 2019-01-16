@@ -18,7 +18,7 @@
             </div>
             <div class="row form-group">
                 <span>
-                    <button type="button" class="left btn btn-default btn-secondary" id="cancel" @click="$emit('hideForm')">Cancel</button>
+                    <button type="button" class="left btn btn-default btn-secondary" id="cancel" @click="cancel()">Cancel</button>
                 </span>
                 <span>
                     <button v-if="formType == 'Add'" type="button" class="btn btn-default btn-primary" id="addContact" @click='addContact()'>{{formType}}</button> 
@@ -80,11 +80,10 @@
                 })).done((data) => {
                     console.log(`car with id ${self.car_id} was modified.`)
                 }).then((data) => {
-                    // FIXME: get rid of call to $parent
-                    self.$parent.getContact()
+                    self.$router.go({ name: 'contact', params: { key: data.id }})
                     console.log("calling getContact() from parent")
                     self.$emit('hideForm')
-                }).always(() => {
+                }).always((data) => {
                     self.loading = false
                 });
                 
@@ -107,6 +106,10 @@
                 }).always(() => {
                     self.loading = false
                 });   
+            },
+            cancel: function() {
+                this.$emit('hideForm')
+                
             },
             update: function(cData) {
                 console.log("updating contact data")

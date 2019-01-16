@@ -39,7 +39,8 @@ export default new Router({
         {
             path: '/contact/:key',
             name: 'contact',
-            component: Contact
+            component: Contact,
+            props: {default: true}
         }
     ]
 })

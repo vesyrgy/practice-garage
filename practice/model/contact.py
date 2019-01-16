@@ -29,7 +29,6 @@ class Contact(BaseModel):
             self.postcode = props['postcode']
         if 'plaats' in props:
             self.plaats = props['plaats']
-        pass
     
     def save(self):
         key = self.put()
@@ -40,7 +39,6 @@ class Contact(BaseModel):
         c = Contact()
         c.fill(props = props)
         new_c = c.save().get()
-        #   TODO adding a new Contact should update the contact on the car 
         return new_c
 
     def delete(self):

@@ -11,12 +11,12 @@
                 <input id="straat" v-model='c_straat' type="text" class="form-control" placeholder="straat">
                 <label for="huisnummer">Huisnummer</label>
                 <input id="huisnummer" v-model='c_huisnummer' type="text" class="form-control" placeholder="Huisnummer">
-                <label for="postcode">Kleur</label>
+                <label for="postcode">Postcode</label>
                 <input id="postcode" v-model='c_postcode' type="text" class="form-control" placeholder="Postcode"> 
                 <label for="plaats">Plaats</label>
                 <input id="plaats" v-model='c_plaats' type="text" class="form-control" placeholder="Plaats"> 
             </div>
-            <div class="row">
+            <div class="row form-group">
                 <span>
                     <button type="button" class="left btn btn-default btn-secondary" id="cancel" @click="$emit('hideForm')">Cancel</button>
                 </span>
@@ -34,7 +34,6 @@
     export default {
         name: 'contact-form',
         props: {
-            formType: String,
             cDataProp: {
                 type: Object,
                 default: function() {
@@ -57,7 +56,8 @@
                 c_huisnummer: this.cDataProp.huisnummer,
                 c_postcode: this.cDataProp.postcode,
                 c_plaats: this.cDataProp.plaats,
-                c_id: this.cDataProp.id
+                c_id: this.cDataProp.id,
+                formType: this.$route.params.ftype
             }
         },
         watch: {
@@ -74,7 +74,7 @@
                 self.loading = true
                 $.when($.ajax({
                     method: 'POST',
-                    url: `/contacts/${self.c_id}/${self.car_id}`,
+                    url: `/contacts/${self.c_id}`,
                     data: { naam: self.c_naam, straat: self.c_straat, huisnummer: self.c_huisnummer, postcode: self.c_postcode },
                     timeout: 60000
                 })).done((data) => {
@@ -94,8 +94,7 @@
                 self.loading = true
                 $.when($.ajax({
                     method: 'PUT',
-                    // TODO: decide which URL to use for this
-                    // url: '/garages/'+self.gid+'/car/'+self.id,
+                    url: `/contacts/${self.c_id}`,
                     data: { naam: self.c_naam, straat: self.c_straat, huisnummer: self.c_huisnummer, postcode: self.c_postcode, id: self.c_id },
                     timeout: 60000
                 })).done((data) => {
